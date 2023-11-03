@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import CountUp from 'vue-countup-v3'
 import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+import { Plus,Money,ForkSpoon } from '@element-plus/icons-vue'
 
 defineProps<{
   msg: string
@@ -63,22 +63,22 @@ const addFood = () => {
 
 <template>
   <div class="common-layout">
-    <el-container>
-      <el-header class="blink" style="height:100px;font-size: 50px;text-align: center;">随机金额吃随机食物</el-header>
-      <el-main>
+    <el-container class="main">
+      <el-header class="blink"></el-header>
+      <el-main style="margin-top:60px">
         <div>
           <el-row>
             <el-text class="amtrange" style="font-size: 30px;color:cornflowerblue;">请选择金额范围: 0元-{{ sliderValue
             }}元</el-text>
           </el-row>
-          <el-row style="margin-top: 10px;">
+          <el-row style="margin-top: 30px;">
             <div class="slider-demo-block">
-              <el-slider v-model="sliderValue" show-input style="width: 600px;" max="100" />
+              <el-slider v-model="sliderValue" show-input style="width: 600px;" max="100" size="large" />
             </div>
           </el-row>
         </div>
         <div>
-          <el-dialog v-model="amtdialogVisible" title="今天能吃的随机金额是人均:" width="50%">
+          <el-dialog v-model="amtdialogVisible" title="今天能吃的随机金额是人均:" width="50%" center align-center>
             <el-row>
               <el-col :span="12">
                 <count-up :end-val="randomAmt"
@@ -90,8 +90,8 @@ const addFood = () => {
             </el-row>
           </el-dialog>
           <el-row>
-            <div style="margin-top: 10px;">
-              <el-button type="primary" round @click="getAmt(sliderValue)" size="large">开始</el-button>
+            <div style="margin-top: 30px;">
+              <el-button type="primary" :icon="Money" @click="getAmt(sliderValue)" size="large">获取金额</el-button>
             </div>
           </el-row>
         </div>
@@ -102,7 +102,7 @@ const addFood = () => {
               <el-text class = "foodtext" style="font-size: 30px;color:cornflowerblue;">请选择随机食物:</el-text>
             </div>
           </el-row>
-          <el-row style="margin-top: 10px;">
+          <el-row style="margin-top: 30px;">
             <div>
               <el-checkbox-group v-model="checkboxGroup" size="large">
                 <el-checkbox-button v-for="city in cities" :key="city" :label="city">
@@ -111,7 +111,7 @@ const addFood = () => {
               </el-checkbox-group>
             </div>
           </el-row>
-          <el-row style="margin-top: 20px;">
+          <el-row style="margin-top: 30px;">
             <div>
               <el-form>
                 <el-form-item label="新增食物:">
@@ -123,18 +123,18 @@ const addFood = () => {
           </el-row>
           <el-row>
             <div>
-              <el-button type="primary" round @click="getfood" size="large">开始</el-button>
+              <el-button type="primary" :icon="ForkSpoon" @click="getfood" size="large">获取食物</el-button>
             </div>
           </el-row>
           <el-row>
-            <div>
+            <div style="margin-top:30px">
               <el-result icon="success" :title="randomFood" :sub-title="'人均' + randomAmt + '元'">
               </el-result>
             </div>
           </el-row>
         </div>
         <div>
-          <el-dialog v-model="fooddialogVisible" title="今天吃的随机食物是:" width="60%" style="text-align: center;">
+          <el-dialog v-model="fooddialogVisible" title="今天吃的随机食物是:" width="60%" style="text-align: center;" align-center>
             <span class="foodres" style="font-size: 50px;color:aliceblue;background-color: cornflowerblue;">{{
               randomFood }}</span>
             <template #footer>
@@ -152,7 +152,7 @@ const addFood = () => {
 </template>
 
 <style scoped>
-@keyframes blink {
+/* @keyframes blink {
   0% {
     opacity: 0;
   }
@@ -168,7 +168,7 @@ const addFood = () => {
   100% {
     opacity: 0;
   }
-}
+} */
 
 @keyframes foodres {
   0% {
@@ -180,7 +180,7 @@ const addFood = () => {
   }
 }
 
-.blink {
+/* .blink {
   background: linear-gradient(135deg,
       #a3d0bd,
       #cb9db9 25%,
@@ -190,13 +190,18 @@ const addFood = () => {
       #ae89cf 80%,
       #c28794 95%,
       #7eb8ad);
-  /* 文字颜色填充设置为透明 */
-  /* 背景裁剪，即让文字使用背景色 */
   background-clip: text;
-  /* 背景图放大一下，看着柔和一些 */
   background-size: 200% 100%;
-  /* 应用动画flowCss 12秒速度 无限循环 线性匀速动画*/
   animation: flowCss 12s infinite linear;
+} */
+
+.blink {
+  background-image:url(src/assets/header.png);
+  width: 46%;
+  height: 130px;
+  margin:0 auto;
+  background-size: cover;
+  top: 0;
 }
 
 @keyframes flowCss {
@@ -222,6 +227,7 @@ const addFood = () => {
   /* 使用右边框作为打印的指针光标 */
   border-right: 1px solid #000;
 }
+
 
 
 @keyframes typingWords {
@@ -258,5 +264,23 @@ const addFood = () => {
   flex-wrap: warp;
   align-content: center;
   justify-content: center;
+}
+
+.el-checkbox-group,.el-form {
+  font-weight:bolder;
+}
+
+.common-layout::before {
+  width: 100%;
+  height: 100%; 
+  background-image: url(src/assets/bg.png);
+  background-size: cover;
+  position: absolute; /*图片定位*/
+  top: 0;
+  left: 0;
+  content: "";
+  z-index: -1; /*设置该标签等级，让其始终位于最底层*/
+  opacity: 38%; /*设置透明度   blur还可以改变照片的模糊度*/
+  filter: opacity(38%);
 }
 </style>
