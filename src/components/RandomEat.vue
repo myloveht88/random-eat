@@ -4,6 +4,8 @@ import CountUp from 'vue-countup-v3'
 import { ElMessage } from 'element-plus'
 import { Plus, Money, ForkSpoon } from '@element-plus/icons-vue'
 
+import SlotMachine from './SlotMachine.vue'
+
 defineProps<{
   msg: string
   randomAmt: number
@@ -15,6 +17,7 @@ const sliderValue = ref(0)
 const randomAmt = ref(0)
 const newFoodList = ref('')
 const randomFood = ref('')
+const randomfoodlist = ref([])
 const amtdialogVisible = ref(false)
 const fooddialogVisible = ref(false)
 const resdialogVisible = ref(false)
@@ -46,26 +49,32 @@ const getrandomfood = () => {
 const getfood = () => {
   fooddialogVisible.value = true
   console.log(checkboxGroup.value.length)
-  getrandomfood()
+  randomfoodlist.value = []
+  checkboxGroup.value.forEach(element => {
+    randomfoodlist.value.push({label:element})
+  });
+  console.log(randomfoodlist.value)
+  // getrandomfood()
 }
 const addFood = () => {
   if (cities.value.includes(newFoodList.value)) {
     ElMessage.error('随机食物已经包含' + newFoodList.value)
     return
-  } else if(newFoodList.value === ''){
+  } else if (newFoodList.value === '') {
     ElMessage.error('请添加想吃的食物' + newFoodList.value)
     return
-  }else {
+  } else {
     cities.value.push(newFoodList.value)
     checkboxGroup.value.push(newFoodList.value)
   }
-  console.log(cities)
+  console.log(randomfoodlist.value)
 }
 
 const getres = () => {
   fooddialogVisible.value = false
   resdialogVisible.value = true
 }
+
 
 
 </script>
@@ -77,7 +86,7 @@ const getres = () => {
       <el-main style="margin-top:30px">
         <div class="upmain">
           <div>
-            <el-card  class="upcard">
+            <el-card class="upcard">
               <el-row>
                 <el-text class="amtrange" style="font-size: 30px;">请选择金额范围: 0元-{{ sliderValue
                 }}元</el-text>
@@ -90,7 +99,8 @@ const getres = () => {
             </el-card>
           </div>
           <div>
-            <el-dialog v-model="amtdialogVisible" title="今天能吃的随机金额是人均:" width="50%" center align-center style="border-radius:20px">
+            <el-dialog v-model="amtdialogVisible" title="今天能吃的随机金额是人均:" width="50%" center align-center
+              style="border-radius:20px">
               <el-row>
                 <el-col :span="12">
                   <count-up :end-val="randomAmt"
@@ -102,53 +112,56 @@ const getres = () => {
               </el-row>
             </el-dialog>
             <el-row>
-              <div style="margin-top: 50px;">
-                <el-button class="btn" type="primary" :icon="Money" @click="getAmt(sliderValue)"
-                  size="large"></el-button>
+              <div style="margin-top: 20px;">
+                <el-button class="btn" type="primary" :icon="Money" @click="getAmt(sliderValue)" size="large"></el-button>
               </div>
             </el-row>
           </div>
         </div>
         <!-- <el-divider /> -->
         <div class="downmain">
-          <el-card class = "downcard">
-          <el-row>
-            <div>
-              <el-text class="foodtext" style="font-size: 30px;">请选择随机食物:</el-text>
-            </div>
-          </el-row>
-          <el-row style="margin-top: 20px;">
-            <div>
-              <el-checkbox-group v-model="checkboxGroup" size="large">
-                <el-checkbox-button v-for="city in cities" :key="city" :label="city">
-                  {{ city }}
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-          </el-row>
-          <el-row style="margin-top: 20px;">
-            <div>
-              <el-form>
-                <el-form-item label="新增食物:">
-                  <el-input v-model="newFoodList" placeholder="新增食物" style="width: 300px;" />
-                  <el-button type="primary" @click="addFood" :icon="Plus" style="margin-left: 10px;"></el-button>
-                </el-form-item>
-              </el-form>
-            </div>
-          </el-row>
-        </el-card>
-          <el-row>
-            <div>
-              <el-button class="btn" type="primary" :icon="ForkSpoon" @click="getfood" size="large" style="margin-top:50px"></el-button>
+          <el-card class="downcard">
+            <el-row>
               <div>
-                <el-dialog v-model="fooddialogVisible" title="今天吃的随机食物是:" width="60%" style="text-align: center;border-radius:20px"
-                  align-center>
-                  <span class="foodres" style="font-size: 50px;color:aliceblue;background-color: cornflowerblue;">{{
-                    randomFood }}</span>
+                <el-text class="foodtext" style="font-size: 30px;">请选择随机食物:</el-text>
+              </div>
+            </el-row>
+            <el-row style="margin-top: 20px;">
+              <div>
+                <el-checkbox-group v-model="checkboxGroup" size="large">
+                  <el-checkbox-button v-for="city in cities" :key="city" :label="city">
+                    {{ city }}
+                  </el-checkbox-button>
+                </el-checkbox-group>
+              </div>
+            </el-row>
+            <el-row style="margin-top: 20px;">
+              <div>
+                <el-form>
+                  <el-form-item label="新增食物:">
+                    <el-input v-model="newFoodList" placeholder="新增食物" style="width: 300px;" />
+                    <el-button type="primary" @click="addFood" :icon="Plus" style="margin-left: 10px;"></el-button>
+                  </el-form-item>
+                </el-form>
+              </div>
+            </el-row>
+          </el-card>
+          <el-row>
+            <div>
+              <el-button class="btn" type="primary" :icon="ForkSpoon" @click="getfood" size="large"
+                style="margin-top:20px"></el-button>
+              <div>
+                <el-dialog v-model="fooddialogVisible" title="今天吃的随机食物是:" width="60%"
+                  style="text-align: center;border-radius:20px" align-center>
+                  <!-- <span class="foodres" style="font-size: 50px;color:aliceblue;background-color: cornflowerblue;">{{
+                    randomFood }}</span> -->
+                  <el-row style="height:300px">
+                    <SlotMachine :foodlist="randomfoodlist" />
+                  </el-row>
                   <template #footer>
                     <span class="dialog-footer">
-                      <el-button type="primary" @click="getres">
-                        去吃吧
+                      <el-button type="success" size="large">
+                        人均{{ randomAmt }}元
                       </el-button>
                     </span>
                   </template>
@@ -164,6 +177,8 @@ const getres = () => {
           </el-dialog>
         </div>
       </el-main>
+      <el-footer class="footer">
+      </el-footer>
     </el-container>
   </div>
 </template>
@@ -295,7 +310,7 @@ const getres = () => {
 }
 
 .main {
-  height:940px;
+  height: 940px;
   background-color: #f7f7f7
 }
 
@@ -305,7 +320,7 @@ const getres = () => {
   z-index: -999;
   opacity: 60%;
   filter: opacity(38%); */
-  background-color:#f7f7f7;
+  background-color: #f7f7f7;
 }
 
 .upcard {
@@ -321,9 +336,13 @@ const getres = () => {
   height: 220px;
   margin: 0 auto;
   border-radius: 20px;
-  margin-top:55px;
+  margin-top: 55px;
   background-color: #ffffff;
 }
 
-
+.footer {
+  height: 80px;
+  background-image: url(src/assets/bg3.png);
+  background-size: contain;
+}
 </style>
